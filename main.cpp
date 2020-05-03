@@ -60,6 +60,7 @@
 #include "UART.h"
 #include "Timer0.h"
 #include "Timer1.h"
+#include "IO.h"
 #include <string>
 
 SlidePot sensor(373, 21); // initialize sensor 
@@ -139,33 +140,13 @@ class Projectile{
 	uint32_t damage;
 };
 
-void SysTick_Init(void){
-  NVIC_ST_CTRL_R = 0;                   // disable SysTick during setup
-  NVIC_ST_RELOAD_R = 80000;  						// maximum reload value
-  NVIC_ST_CURRENT_R = 0;                // any write to current clears it
-                                        // enable SysTick with core clock
-  NVIC_ST_CTRL_R = 0x07;
-}
-
-void PortF_Init(void){
-  volatile uint32_t delay;
-	SYSCTL_RCGCGPIO_R |= 0x20;
-	delay = 0;
-	GPIO_PORTF_DIR_R |= 0x0E;
-	GPIO_PORTF_DEN_R |= 0x0E;
-}
-
-void IO_Init(void) {
-	volatile int delay = 0;
-	SYSCTL_RCGCGPIO_R |= 0x20;	// enable port F clock
-	delay = 0;
-	GPIO_PORTF_DIR_R &= ~0x10;	// set PF4 to input
-	GPIO_PORTF_DEN_R |= 0x10;		// enable PF4
-	GPIO_PORTF_PDR_R |= 0x10;
+void TitleScreen() {
+	ST7735_SetTextColor(ST7735_CYAN);
+	ST7735_OutString("Hello World!");
+	IO_Touch();
 }
 
 int jumpSize[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 7, 6, 5, 4, 3, 2, 1, 0};  // 14
-
 
 void movingDino(){
 	if(!jumpFlag){
@@ -248,26 +229,31 @@ void checkPosition(){
 
 
 int main(void){
-  PLL_Init(Bus80MHz);       // Bus clock is 80 MHz 
-  Random_Init(1);
-  Output_Init();
-  Timer0_Init(&movingDino,8000000); // 50 Hz
-	// Timer1_Init(&screenRefresh,8000000); // 50 Hz
+	// all initializations
+	PLL_Init(Bus80MHz); // Bus clock is 80 MHz
+	Random_Init(1);
+	Output_Init();
 	SysTick_Init();
 	PortF_Init();
 	IO_Init();
 	ADC_Init();
 	EnableInterrupts();
 	
-  ST7735_FillScreen(0x0000);            // set screen to black
+	// load up title screen
+	TitleScreen();
+	
+	Timer0_Init(&movingDino,6000000); // 50 Hz
+	// Timer1_Init(&screenRefresh,8000000); // 50 Hz
+
+	ST7735_FillScreen(0x0000); // set screen to black
 	int previousY, preYCoord;
-  while(1){
+	while (1) {
 		sensor.Sync();
 		Data = sensor.ADCsample();
-    Position = sensor.Distance(); Position /= 5; Position *= 5;
+		Position = sensor.Distance();
+		Position /= 5;
+		Position *= 5;
 
-		
-		
 		if((GPIO_PORTF_DATA_R & 0x10) == 0x10){
 				// jumpFlag = 1;
 		}
