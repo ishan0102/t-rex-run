@@ -84,25 +84,25 @@ struct sprite{
 	uint32_t height;
 };          
 typedef struct sprite sprite_t;
-sprite_t dino = {TRexStationary,20,20};
-sprite_t dinoLeft = {TRexLeft,20,20};
-sprite_t dinoRight = {TRexRight,20,20};
-sprite_t dinoBlank = {blankStand, 20, 20};
-sprite_t dinoLeftDuck = {TRexDuckLeft, 26, 13};
-sprite_t dinoRightDuck = {TRexDuckRight,26, 13};
-sprite_t dinoBlankDuck = {blankDuck, 26, 13};
-sprite_t tallCact = {tallCactus, 20, 24};
-sprite_t tallCactBlank = {blankTall, 20, 24};
+sprite_t dino = {TRexStationary, 30, 24};
+sprite_t dinoLeft = {TRexLeft, 30, 24};
+sprite_t dinoRight = {TRexRight, 30, 24};
+sprite_t dinoBlank = {blankStand, 30, 24};
+sprite_t dinoLeftDuck = {TRexDuckLeft, 30, 24};
+sprite_t dinoRightDuck = {TRexDuckRight, 30, 24};
+sprite_t dinoBlankDuck = {blankDuck, 30, 17};
+sprite_t tallCact = {tallCactus, 26, 28};
+sprite_t tallCactBlank = {blankTall, 26, 28};
 
 struct Player {
-	uint32_t x;      // x coordinate
-  uint32_t y;      // y coordinate
+	int32_t x;      // x coordinate
+  int32_t y;      // y coordinate
 	int32_t vx;
 	int32_t vy;
 	sprite_t* pSprite;
 	sprite_t* blankSprite;
 public:
-	Player(uint32_t ix, uint32_t iy, sprite_t* nSprite, sprite_t* nbSprite, int32_t nvx, int32_t nvy)
+	Player(int32_t ix, int32_t iy, sprite_t* nSprite, sprite_t* nbSprite, int32_t nvx, int32_t nvy)
 	: x(ix), y(iy), vx(nvx), vy(nvy),  pSprite(nSprite) ,  blankSprite(nbSprite) {}
 		
 	void move(int dx, int dy){
@@ -127,9 +127,6 @@ public:
 	
 		
 	friend void movingDino();
-	
-	friend void jumpingDino();
-	
 };
 
 
@@ -167,12 +164,12 @@ void IO_Init(void) {
 	GPIO_PORTF_PDR_R |= 0x10;
 }
 
-int jumpSize[] = {0, 1, 2, 3, 4, 5, 6, 6, 5, 4, 3, 2, 1, 0};  // 14
+int jumpSize[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 7, 6, 5, 4, 3, 2, 1, 0};  // 14
 
 
 void movingDino(){
 	if(!jumpFlag){
-		//TRex.clearPlayer();
+		// TRex.clearPlayer();
 		static int counter = 0;
 		if(counter == 0){
 			if(duckFlag){
@@ -202,6 +199,7 @@ void movingDino(){
 			counter++;
 		}
 		//TRex.clearPlayer();
+		
 	} else {
 		static int jumpComplete = 0;
 		static int enterJump = 0;
@@ -214,13 +212,13 @@ void movingDino(){
 		}
 		GPIO_PORTF_DATA_R &= 0x00;
 		GPIO_PORTF_DATA_R ^= 0x02;
-			//TRex.clearPlayer();
+		TRex.clearPlayer();
 		TRex.y = 120 - jumpSize[index] * 6;
 		index++;
 
 		TRex.clearPlayer();
 		/*** exit case***/
-		if(index == 14){
+		if(index == 18){
 			jumpComplete = 0;
 			index = 0;
 			enterJump = 0;
@@ -229,13 +227,12 @@ void movingDino(){
 	}		
 	
 	
-	Cactus.clearPlayer();
-	if(Cactus.x > 0){
-		Cactus.x -= Cactus.vx / 2;
+
+	if(Cactus.x > -22){
+		Cactus.x -= Cactus.vx;
 	} else {
 		Cactus.x = 128;
 	}
-	Cactus.clearPlayer();
 }
 
 void checkPosition(){
@@ -254,7 +251,7 @@ int main(void){
   PLL_Init(Bus80MHz);       // Bus clock is 80 MHz 
   Random_Init(1);
   Output_Init();
-  Timer0_Init(&movingDino,1000000); // 50 Hz
+  Timer0_Init(&movingDino,8000000); // 50 Hz
 	// Timer1_Init(&screenRefresh,8000000); // 50 Hz
 	SysTick_Init();
 	PortF_Init();
@@ -275,8 +272,13 @@ int main(void){
 				// jumpFlag = 1;
 		}
 		checkPosition();
+		// ST7735_FillScreen(0x0000);
+		// TRex.clearPlayer();
 		TRex.drawPlayer();
+		// Cactus.clearPlayer();
 		Cactus.drawPlayer();
+		// Cactus.clearPlayer();
+
 }
 	}
 
