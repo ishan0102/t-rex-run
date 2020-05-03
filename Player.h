@@ -57,9 +57,9 @@ public:
 		vy = nvy;
 	}
 
-
-
-	friend void movingDino();
+	int collision();
+	
+	void movingDino();
 };
 
 Player TRex(20, 120, &dino, &dinoBlank, 0, 0);
@@ -69,6 +69,19 @@ class Projectile{
 	uint32_t velocity;
 	uint32_t damage;
 };
+
+#define calibration 17
+int collision() {
+	int TcenterX = TRex.x + (TRex.pSprite->width / 2);
+	int TcenterY = TRex.y + (TRex.pSprite->height / 2);
+	int CcenterX = Cactus.x + (Cactus.pSprite->width / 2);
+	int CcenterY = Cactus.y + (Cactus.pSprite->height / 2);
+
+	if((TcenterX - CcenterX < calibration && TcenterX - CcenterX > -calibration) && (TcenterY - CcenterY < calibration && TcenterY - CcenterY > -calibration)){
+			return 1; // has collided
+	}
+	return 0;// no collision
+}
 
 int jumpSize[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 7, 6, 5, 4, 3, 2, 1, 0};  // 14
 
@@ -130,8 +143,6 @@ void movingDino(){
 			jumpFlag = 0;
 		}
 	}		
-
-
 
 	if(Cactus.x > -22){
 		Cactus.x -= Cactus.vx;

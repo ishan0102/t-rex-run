@@ -79,7 +79,7 @@ void TitleScreen() {
 
 int main(void){
 	// all initializations
-	PLL_Init(Bus80MHz); // Bus clock is 80 MHz
+	PLL_Init(Bus80MHz);
 	Random_Init(1);
 	Output_Init();
 	SysTick_Init();
@@ -103,14 +103,17 @@ int main(void){
 		Position /= 5;
 		Position *= 5;
 
-		if((GPIO_PORTF_DATA_R & 0x10) == 0x10){
+		if ((GPIO_PORTF_DATA_R & 0x10) == 0x10){
 				// jumpFlag = 1;
 		}
 		checkPosition();
 		TRex.drawPlayer();
 		Cactus.drawPlayer();
-}
+		if (collision()) {
+			TitleScreen();
+		}
 	}
+}
 
 void SysTick_Handler(void){ // every sample
   sensor.Save(ADC_In());
