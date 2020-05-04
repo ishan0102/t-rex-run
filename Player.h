@@ -11,6 +11,8 @@ int flag;
 int duckFlag;
 int jumpFlag;
 
+uint32_t Score;
+
 struct sprite{
 	const unsigned short *image; // ptr->image
   uint32_t width;
@@ -179,6 +181,16 @@ void movingDino(){
 		counter2 = 0;
 	}	else {
 		counter2++;
+	}
+	
+	static int counter3 = 0;
+	if(counter3 == 0){
+		Score++;
+		counter3++;
+	} else if(counter3 >= 30){
+		counter3 = 0;
+	}	else {
+		counter3++;
 	}
 
 	if(Cactus.x > -220){
