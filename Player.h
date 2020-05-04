@@ -59,7 +59,7 @@ public:
 	}
 
 	int collision();
-	
+
 	void movingDino();
 };
 
@@ -119,7 +119,7 @@ void movingDino(){
 				}
 			}
 			counter++;
-			
+
 		} else if(counter >= 15){
 			counter = 0;
 		}	else {
@@ -132,7 +132,7 @@ void movingDino(){
 		static int enterJump = 0;
 		static int index = 0;
 		static int indexFlag = 0;
-		
+
 		if(!enterJump){
 			TRex.pSprite = &dino;
 			jumpComplete = 1;
@@ -145,7 +145,7 @@ void movingDino(){
 		if(index == 120){
 			indexFlag = 1;
 		}
-		
+
 		if(!indexFlag){
 			index++;
 		} else {
@@ -162,7 +162,7 @@ void movingDino(){
 			indexFlag = 0;
 		}
 	}		
-	
+
 	static int counter2 = 0;
 	static int birdFlag = 0;
 	if(counter2 == 0){
@@ -173,7 +173,7 @@ void movingDino(){
 			Bird.pSprite = &birdWingsUp;
 			birdFlag = 1;
 		}
-		
+
 		counter2++;
 	} else if(counter2 >= 30){
 		counter2 = 0;
@@ -186,7 +186,7 @@ void movingDino(){
 	} else {
 		Cactus.x = 1280;
 	}
-	
+
 	if(Bird.x > -220){
 		Bird.x -= Bird.vx / 10;
 	} else {
