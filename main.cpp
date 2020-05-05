@@ -4,9 +4,6 @@
 // This is a starter project for the EE319K Lab 10 in C++
 
 // Last Modified: 1/17/2020 
-// http://www.spaceinvaders.de/
-// sounds at http://www.classicgaming.cc/classics/spaceinvaders/sounds.php
-// http://www.classicgaming.cc/classics/spaceinvaders/playguide.php
 /* This example accompanies the books
    "Embedded Systems: Real Time Interfacing to Arm Cortex M Microcontrollers",
    ISBN: 978-1463590154, Jonathan Valvano, copyright (c) 2017
@@ -63,12 +60,30 @@
 #include "IO.h"
 #include "Player.h"
 #include "Menu.h"
+#include "Print.h"
 #include <string>
 #include <string.h>
+#include <stdlib.h>
 
 extern "C" void DisableInterrupts(void);
 extern "C" void EnableInterrupts(void);
 extern "C" void SysTick_Handler(void);
+
+void currentScore() {
+	char* s1 = (char*) "Score: ";
+	char* s2 = (char*) "Resultado: ";
+	if (!LanguageFlag) {
+		ST7735_SetCursor(5, 2);
+		ST7735_OutString(s1);
+		ST7735_SetCursor(12, 2);
+		LCD_OutDec(Score);
+	} else {
+		ST7735_SetCursor(5, 2);
+		ST7735_OutString(s2);
+		ST7735_SetCursor(16, 2);
+		LCD_OutDec(Score);
+	}
+}	
 	
 int main(void){
 	// all initializations
@@ -116,9 +131,9 @@ int main(void){
 		if (collision()) {
 			ST7735_FillScreen(0000);
 			if (!LanguageFlag) {
-				DeathScreenEng();
+				DeathScreenEng(Score);
 			} else {
-				DeathScreenSpan();
+				DeathScreenSpan(Score);
 			}
 			Score = 0;
 			ST7735_FillScreen(0000);

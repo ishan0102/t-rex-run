@@ -183,15 +183,7 @@ void movingDino(){
 		counter2++;
 	}
 	
-	static int counter3 = 0;
-	if(counter3 == 0){
-		Score++;
-		counter3++;
-	} else if(counter3 >= 30){
-		counter3 = 0;
-	}	else {
-		counter3++;
-	}
+	Score++;
 
 	if(Cactus.x > -220){
 		Cactus.x -= Cactus.vx / 10;
@@ -206,7 +198,7 @@ void movingDino(){
 	}
 }
 
-uint32_t Position = 10;  // 32-bit fixed-point 0.01 cm
+uint32_t Position;  // 32-bit fixed-point 0.01 cm
 
 void checkPosition(){
 	if(Position > 120){

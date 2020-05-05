@@ -3,9 +3,11 @@
 #include "ST7735.h"
 #include "SlidePot.h"
 #include "IO.h"
+#include "Print.h"
 
 SlidePot sensor(373, 21); // initialize sensor
 uint32_t Data;      // 12-bit ADC
+uint32_t PosMenu;
 uint8_t LanguageFlag;
 uint8_t PreGameFlag;
 char scoreArray[5] = {'0', '0', '0', '0', '\0'};
@@ -16,7 +18,7 @@ void SelectLanguage() {
 	do {
 		sensor.Sync();
 		Data = sensor.ADCsample();
-		Position = sensor.Distance();
+		PosMenu = sensor.Distance();
 		
 		ST7735_SetCursor(8, 3);
 		char* s0 = (char*) "T-Rex Run";
@@ -34,7 +36,7 @@ void SelectLanguage() {
 		char* s3 = (char*) "Spanish";
 		ST7735_OutString(s3);
 		
-		if (Position < 80) {
+		if (PosMenu < 80) {
 			LanguageFlag = 0;
 			ST7735_SetCursor(7, 10); ST7735_OutString(s5);
 			ST7735_SetCursor(7, 9); ST7735_OutString(s4);
@@ -79,7 +81,7 @@ void TitleScreenSpan() {
 	IO_Touch();
 }
 
-void DeathScreenEng() {
+void DeathScreenEng(uint32_t final) {
 	ST7735_SetCursor(8, 2);
 	char* s1 = (char*) "You Died";
 	ST7735_OutString(s1);
@@ -88,8 +90,7 @@ void DeathScreenEng() {
 	char* s2 = (char*) "Final Score: ";
 	ST7735_OutString(s2);
 	ST7735_SetCursor(16, 5);
-	//toString();
-	ST7735_OutString(scoreArray);
+	LCD_OutDec(final);
 
 	ST7735_SetCursor(8, 8);
 	char* s3 = (char*) "Press to\n       Play Again";
@@ -98,7 +99,7 @@ void DeathScreenEng() {
 	IO_Touch();
 }
 
-void DeathScreenSpan() {
+void DeathScreenSpan(uint32_t final) {
 	ST7735_SetCursor(8, 2);
 	char* s1 = (char*) "Tu Moriste";
 	ST7735_OutString(s1);
@@ -107,8 +108,7 @@ void DeathScreenSpan() {
 	char* s2 = (char*) "Resultado: ";
 	ST7735_OutString(s2);
 	ST7735_SetCursor(16, 5);
-	//toString();
-	ST7735_OutString(scoreArray);
+	LCD_OutDec(final);
 
 	ST7735_SetCursor(6, 8);
 	char* s3 = (char*) "Presione para\n      Jugar de Nuevo";
@@ -127,28 +127,4 @@ void PreGame() {
 		TitleScreenSpan();
 	}
 	ST7735_FillScreen(0000);
-}
-
-void toString() {
-	uint32_t temp = Score;
-	for (int i = 3; i >= 0; i++) {
-		scoreArray[i] = (temp % 10) + 0x30;
-		temp /= 10;
-	}
-}
-
-void currentScore() {
-	if (!LanguageFlag) {
-		ST7735_SetCursor(7, 2);
-		ST7735_OutString("Score: ");
-		ST7735_SetCursor(14, 2);
-		//toString();
-		ST7735_OutString(scoreArray);
-	} else {
-		ST7735_SetCursor(5, 2);
-		ST7735_OutString("Resultado: ");
-		ST7735_SetCursor(16, 2);
-		//toString();
-		ST7735_OutString(scoreArray);
-	}
 }
