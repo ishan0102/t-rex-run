@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "Images.h"
 #include "ST7735.h"
+#include "Random.h"
 #include "../inc/tm4c123gh6pm.h"
 
 void movingDino();
@@ -10,6 +11,9 @@ void jumpingDino();
 int flag;
 int duckFlag;
 int jumpFlag;
+
+uint32_t Score;
+int currentDifficulty = 0;
 
 struct sprite{
 	const unsigned short *image; // ptr->image
@@ -64,8 +68,8 @@ public:
 };
 
 Player TRex(200, 1200, &dino, &dinoBlank, 0, 0);
-Player Cactus(1280, 1200, &tallCact, &tallCactBlank, 40, 0);
-Player Bird(2080, 1000, &birdWingsDown, &dinoBlank, 40, 0);
+Player Cactus(1880, 1200, &tallCact, &tallCactBlank, 40, 0);
+Player Bird(3680, 1000, &birdWingsDown, &dinoBlank, 40, 0);
 
 class Projectile{
 	uint32_t velocity;
@@ -180,21 +184,23 @@ void movingDino(){
 	}	else {
 		counter2++;
 	}
+	
+	Score++;
 
 	if(Cactus.x > -220){
 		Cactus.x -= Cactus.vx / 10;
 	} else {
-		Cactus.x = 1280;
+		Cactus.x = Random32() % 1000 + 1880;
 	}
 
 	if(Bird.x > -220){
 		Bird.x -= Bird.vx / 10;
 	} else {
-		Bird.x = 1280;
+		Bird.x = Random32() % 1000 + 1880;
 	}
 }
 
-uint32_t Position = 10;  // 32-bit fixed-point 0.01 cm
+uint32_t Position;  // 32-bit fixed-point 0.01 cm
 
 void checkPosition(){
 	if(Position > 120){

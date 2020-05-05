@@ -4,9 +4,6 @@
 // This is a starter project for the EE319K Lab 10 in C++
 
 // Last Modified: 1/17/2020 
-// http://www.spaceinvaders.de/
-// sounds at http://www.classicgaming.cc/classics/spaceinvaders/sounds.php
-// http://www.classicgaming.cc/classics/spaceinvaders/playguide.php
 /* This example accompanies the books
    "Embedded Systems: Real Time Interfacing to Arm Cortex M Microcontrollers",
    ISBN: 978-1463590154, Jonathan Valvano, copyright (c) 2017
@@ -62,21 +59,47 @@
 #include "Timer1.h"
 #include "IO.h"
 #include "Player.h"
+#include "Menu.h"
+#include "Print.h"
 #include <string>
-
-SlidePot sensor(373, 21); // initialize sensor 
-uint32_t Data;      // 12-bit ADC
+#include <string.h>
+#include <stdlib.h>
 
 extern "C" void DisableInterrupts(void);
 extern "C" void EnableInterrupts(void);
 extern "C" void SysTick_Handler(void);
 
-void TitleScreen() {
-	ST7735_SetTextColor(0xFFFF);
-	ST7735_OutString("Hello World!");
-	IO_Touch();
+void currentScore() {
+	char* s1 = (char*) "Score: ";
+	char* s2 = (char*) "Resultado: ";
+	if (!LanguageFlag) {
+		ST7735_SetCursor(8, 2);
+		ST7735_OutString(s1);
+		ST7735_SetCursor(15, 2);
+		LCD_OutDec(Score);
+	} else {
+		ST7735_SetCursor(5, 2);
+		ST7735_OutString(s2);
+		ST7735_SetCursor(16, 2);
+		LCD_OutDec(Score);
+	}
+}	
+int prevScore = 0;
+void increaseDifficult(){
+	int temp = Score / 300;
+	
+	for(int i = 0;i < temp; i++){
+		currentDifficulty++;
+	}
+	
+	if(prevScore < temp){
+		Bird.vx *= 1.1;
+		Cactus.vx *= 1.1;
+		prevScore = temp;
+	}
+	
 }
-
+	
 int main(void){
 	// all initializations
 	PLL_Init(Bus80MHz);
@@ -86,31 +109,60 @@ int main(void){
 	PortF_Init();
 	IO_Init();
 	ADC_Init();
+	Timer0_Init(&movingDino, 600000); // 50 Hz
 	EnableInterrupts();
 	
-	// load up title screen
-	TitleScreen();
-	
-	Timer0_Init(&movingDino,6000000); // 50 Hz
 	// Timer1_Init(&screenRefresh,8000000); // 50 Hz
 
 	ST7735_FillScreen(0x0000); // set screen to black
 	int previousY, preYCoord;
+	
 	while (1) {
+		// only do first time
+		if (!PreGameFlag) {
+			PreGame();
+			PreGameFlag = 1;
+			RestartFlag = 0;
+		}
+		
+		// gather data
 		sensor.Sync();
 		Data = sensor.ADCsample();
-		Position = sensor.Distance();
-		Position /= 5;
-		Position *= 5;
-
+		Position = sensor.Distance(); Position /= 5; Position *= 5;
+		
 		if ((GPIO_PORTF_DATA_R & 0x10) == 0x10){
 				// jumpFlag = 1;
 		}
+		
+		// trying to add delay so player doesn't die immediately, work on this
+		if(RestartFlag) {
+			Cactus.x = 1880;
+			Bird.x = 3680;
+			currentDifficulty = 0;
+			RestartFlag = 0;
+		}
+		
+		// draw sprites
 		checkPosition();
+		Bird.drawPlayer();
 		TRex.drawPlayer();
 		Cactus.drawPlayer();
+		
+		// score checker
+		currentScore();
+		increaseDifficult();
+		
+		// check if collision occurred
 		if (collision()) {
-			TitleScreen();
+			ST7735_FillScreen(0000);
+			if (!LanguageFlag) {
+				DeathScreenEng(Score);
+			} else {
+				DeathScreenSpan(Score);
+			}
+			Score = 0;
+			ST7735_FillScreen(0000);
+			RestartFlag = 1;
 		}
 	}
 }
