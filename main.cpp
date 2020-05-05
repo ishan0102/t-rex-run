@@ -113,32 +113,70 @@ void SelectLanguage() {
 }
 
 void TitleScreenEng() {
-	ST7735_SetCursor(1, 3);
-	char* s1 = (char*) "Welcome to T-Rex Run";
+	ST7735_SetCursor(7, 2);
+	char* s1 = (char*) "Welcome to\n        T-Rex Run";
 	ST7735_OutString(s1);
 	
-	ST7735_SetCursor(1, 5);
-	char* s2 = (char*) "By Michael Chen\n   and Ishan Shah";
+	ST7735_SetCursor(4, 5);
+	char* s2 = (char*) "By Michael Chen\n    and Ishan Shah";
 	ST7735_OutString(s2);
 	
-	ST7735_SetCursor(4, 10);
-	char* s3 = (char*) "Press Button\n     to Start";
+	ST7735_SetCursor(6, 9);
+	char* s3 = (char*) "Press Button\n        to Start";
 	ST7735_OutString(s3);
 
 	IO_Touch();
 }
 
 void TitleScreenSpan() {
-	ST7735_SetCursor(1, 3);
-	char* s1 = (char*) "Bienvenido a T-Rex Run";
+	ST7735_SetCursor(6, 2);
+	char* s1 = (char*) "Bienvenido a\n        T-Rex Run";
 	ST7735_OutString(s1);
 	
-	ST7735_SetCursor(1, 5);
-	char* s2 = (char*) "Por Michael Chen\n   y Ishan Shah";
+	ST7735_SetCursor(4, 5);
+	char* s2 = (char*) "Por Michael Chen\n      y Ishan Shah";
 	ST7735_OutString(s2);
 	
-	ST7735_SetCursor(4, 10);
-	char* s3 = (char*) "Presione el boton\n    para comenzar";
+	ST7735_SetCursor(3, 9);
+	char* s3 = (char*) "Presione el Boton\n      para Comenzar";
+	ST7735_OutString(s3);
+	
+	IO_Touch();
+}
+
+void DeathScreenEng() {
+	ST7735_SetCursor(8, 2);
+	char* s1 = (char*) "You Died";
+	ST7735_OutString(s1);
+	
+	ST7735_SetCursor(3, 5);
+	char* s2 = (char*) "Final Score: ";
+	ST7735_OutString(s2);
+	ST7735_SetCursor(16, 5);
+	//toString();
+	ST7735_OutString(scoreArray);
+
+	ST7735_SetCursor(8, 8);
+	char* s3 = (char*) "Press to\n       Play Again";
+	ST7735_OutString(s3);
+	
+	IO_Touch();
+}
+
+void DeathScreenSpan() {
+	ST7735_SetCursor(8, 2);
+	char* s1 = (char*) "Tu Moriste";
+	ST7735_OutString(s1);
+	
+	ST7735_SetCursor(5, 5);
+	char* s2 = (char*) "Resultado: ";
+	ST7735_OutString(s2);
+	ST7735_SetCursor(16, 5);
+	//toString();
+	ST7735_OutString(scoreArray);
+
+	ST7735_SetCursor(6, 8);
+	char* s3 = (char*) "Presione para\n      Jugar de Nuevo";
 	ST7735_OutString(s3);
 	
 	IO_Touch();
@@ -199,15 +237,29 @@ int main(void){
 		TRex.drawPlayer();
 		Cactus.drawPlayer();
 		
-		ST7735_SetCursor(1, 4);
-		ST7735_OutString("Score: ");
-		ST7735_SetCursor(8, 4);
-		//toString();
-		ST7735_OutString(scoreArray);
+		if (!LanguageFlag) {
+			ST7735_SetCursor(7, 2);
+			ST7735_OutString("Score: ");
+			ST7735_SetCursor(14, 2);
+			//toString();
+			ST7735_OutString(scoreArray);
+		} else {
+			ST7735_SetCursor(5, 2);
+			ST7735_OutString("Resultado: ");
+			ST7735_SetCursor(16, 2);
+			//toString();
+			ST7735_OutString(scoreArray);
+		}
 		
 		if (collision()) {
+			ST7735_FillScreen(0000);
+			if (!LanguageFlag) {
+				DeathScreenEng();
+			} else {
+				DeathScreenSpan();
+			}
 			Score = 0;
-			TitleScreenEng();
+			ST7735_FillScreen(0000);
 		}
 	}
 }
