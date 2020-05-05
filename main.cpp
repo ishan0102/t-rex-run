@@ -84,6 +84,7 @@ void currentScore() {
 		LCD_OutDec(Score);
 	}
 }	
+
 int prevScore = 0;
 void increaseDifficult(){
 	int temp = Score / 300;
@@ -134,7 +135,6 @@ int main(void){
 				// jumpFlag = 1;
 		}
 		
-		// trying to add delay so player doesn't die immediately, work on this
 		if(RestartFlag) {
 			Cactus.x = 1880;
 			Bird.x = 3680;
