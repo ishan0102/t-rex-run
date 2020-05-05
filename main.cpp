@@ -114,9 +114,7 @@ int main(void){
 	EnableInterrupts();
 	
 	// Timer1_Init(&screenRefresh,8000000); // 50 Hz
-
 	ST7735_FillScreen(0x0000); // set screen to black
-	int previousY, preYCoord;
 	
 	while (1) {
 		// only do first time
@@ -124,6 +122,22 @@ int main(void){
 			PreGame();
 			PreGameFlag = 1;
 			RestartFlag = 0;
+		}
+		
+		if ((GPIO_PORTD_DATA_R & 0x02) == 2) {
+			PauseFlag = 1;
+			pauseDino = 1;
+		}
+		
+		if (PauseFlag) {
+			if (!LanguageFlag) {
+				PauseScreenEng();
+			} else {
+				PauseScreenSpan();
+			}
+			PauseFlag = 0;
+			pauseDino = 0;
+			ST7735_FillScreen(0x0000);
 		}
 		
 		// gather data

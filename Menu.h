@@ -11,6 +11,7 @@ uint32_t PosMenu;
 uint8_t LanguageFlag;
 uint8_t PreGameFlag;
 uint8_t RestartFlag = 0;
+uint8_t PauseFlag = 0;
 char scoreArray[5] = {'0', '0', '0', '0', '\0'};
 
 void SelectLanguage() {
@@ -128,4 +129,18 @@ void PreGame() {
 		TitleScreenSpan();
 	}
 	ST7735_FillScreen(0000);
+}
+
+void PauseScreenEng() {
+	ST7735_FillScreen(0x0000);
+	ST7735_SetCursor(10, 5);
+	ST7735_OutString("Paused");
+	IO_Touch_Pause();
+}
+
+void PauseScreenSpan() {
+	ST7735_FillScreen(0x0000);
+	ST7735_SetCursor(9, 5);
+	ST7735_OutString("Pausado");
+	IO_Touch_Pause();
 }
