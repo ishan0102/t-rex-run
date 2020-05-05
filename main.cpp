@@ -73,9 +73,9 @@ void currentScore() {
 	char* s1 = (char*) "Score: ";
 	char* s2 = (char*) "Resultado: ";
 	if (!LanguageFlag) {
-		ST7735_SetCursor(5, 2);
+		ST7735_SetCursor(8, 2);
 		ST7735_OutString(s1);
-		ST7735_SetCursor(12, 2);
+		ST7735_SetCursor(15, 2);
 		LCD_OutDec(Score);
 	} else {
 		ST7735_SetCursor(5, 2);
@@ -107,7 +107,8 @@ int main(void){
 		if (!PreGameFlag) {
 			PreGame();
 			PreGameFlag = 1;
-		}	
+			RestartFlag = 1;
+		}
 		
 		// gather data
 		sensor.Sync();
@@ -117,6 +118,15 @@ int main(void){
 		if ((GPIO_PORTF_DATA_R & 0x10) == 0x10){
 				// jumpFlag = 1;
 		}
+		
+		// trying to add delay so player doesn't die immediately, work on this
+//		if(RestartFlag) {
+//			int i = 0;
+//			while (i != 100000000) {
+//				i++;
+//			}
+//			RestartFlag = 0;
+//		}
 		
 		// draw sprites
 		checkPosition();
@@ -137,6 +147,7 @@ int main(void){
 			}
 			Score = 0;
 			ST7735_FillScreen(0000);
+			RestartFlag = 1;
 		}
 	}
 }

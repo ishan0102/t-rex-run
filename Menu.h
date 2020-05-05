@@ -10,6 +10,7 @@ uint32_t Data;      // 12-bit ADC
 uint32_t PosMenu;
 uint8_t LanguageFlag;
 uint8_t PreGameFlag;
+uint8_t RestartFlag = 0;
 char scoreArray[5] = {'0', '0', '0', '0', '\0'};
 
 void SelectLanguage() {
