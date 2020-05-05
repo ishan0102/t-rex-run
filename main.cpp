@@ -84,6 +84,22 @@ void currentScore() {
 		LCD_OutDec(Score);
 	}
 }	
+
+int prevScore = 0;
+void increaseDifficult(){
+	int temp = Score / 300;
+	
+	for(int i = 0;i < temp; i++){
+		currentDifficulty++;
+	}
+	
+	if(prevScore < temp){
+		Bird.vx *= 1.1;
+		Cactus.vx *= 1.1;
+		prevScore = temp;
+	}
+	
+}
 	
 int main(void){
 	// all initializations
@@ -107,7 +123,7 @@ int main(void){
 		if (!PreGameFlag) {
 			PreGame();
 			PreGameFlag = 1;
-			RestartFlag = 1;
+			RestartFlag = 0;
 		}
 		
 		// gather data
@@ -119,14 +135,12 @@ int main(void){
 				// jumpFlag = 1;
 		}
 		
-		// trying to add delay so player doesn't die immediately, work on this
-//		if(RestartFlag) {
-//			int i = 0;
-//			while (i != 100000000) {
-//				i++;
-//			}
-//			RestartFlag = 0;
-//		}
+		if(RestartFlag) {
+			Cactus.x = 1880;
+			Bird.x = 3680;
+			currentDifficulty = 0;
+			RestartFlag = 0;
+		}
 		
 		// draw sprites
 		checkPosition();
@@ -136,6 +150,7 @@ int main(void){
 		
 		// score checker
 		currentScore();
+		increaseDifficult();
 		
 		// check if collision occurred
 		if (collision()) {
