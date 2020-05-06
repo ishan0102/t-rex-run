@@ -1,0 +1,25 @@
+*.xls
+*.crf
+*.xlsx
+*.uvguix
+*.uvoptx
+*.uvprojx
+*.o
+*.scvd
+*.axf
+*.htm
+*.map
+*.lnp
+*.d
+*.dep
+*.lst
+*.iex
+*.sct
+*.Ishan Shah
+*.valvano
+*.Bak
+startup*
+
+RTE
+
+
