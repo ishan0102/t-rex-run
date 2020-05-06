@@ -20,6 +20,8 @@ void Sound_Fastinvader3(void);
 void Sound_Fastinvader4(void);
 void Sound_Highpitch(void);
 
+void TIMER1_handler(void);
+
 #endif
 
 
