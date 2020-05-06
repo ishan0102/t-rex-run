@@ -47,6 +47,9 @@
 // Gnd (pin 1) connected to ground
 
 #include <stdint.h>
+#include <string>
+#include <string.h>
+#include <stdlib.h>
 #include "../inc/tm4c123gh6pm.h"
 #include "PLL.h"
 #include "ST7735.h"
@@ -61,9 +64,7 @@
 #include "Player.h"
 #include "Menu.h"
 #include "Print.h"
-#include <string>
-#include <string.h>
-#include <stdlib.h>
+#include "Sound.h"
 
 extern "C" void DisableInterrupts(void);
 extern "C" void EnableInterrupts(void);

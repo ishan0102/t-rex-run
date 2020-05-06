@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include "Sound.h"
 #include "DAC.h"
+#include "../inc/tm4c123gh6pm.h"
+#include "Timer1.h"
 
 const uint8_t shoot[4080] = {
   129, 99, 103, 164, 214, 129, 31, 105, 204, 118, 55, 92, 140, 225, 152, 61, 84, 154, 184, 101, 
@@ -1137,34 +1139,102 @@ const uint8_t highpitch[1802] = {
   67, 119, 148, 166, 164, 238, 223, 202, 174, 112, 96, 78, 0, 34, 54, 99, 143, 160, 166, 183, 
   250, 207};
 
-void Sound_Init(void){
-// write this
-};
+uint32_t test;
+uint32_t period_2; 
+uint32_t index_s = 0; 
+const uint8_t *pt_s  = 0; 
+int note = 0; 	
+	
 void Sound_Play(const uint8_t *pt, uint32_t count){
 // write this
-};
-void Sound_Shoot(void){
-// write this
-};
-void Sound_Killed(void){
-// write this
-};
-void Sound_Explosion(void){
-// write this
+	note = pt[count];
+	note = note >> 4;
+	DAC_Out(note);
 };
 
+int end_idx;
+
+void Sound_Play_Init(void){
+	//gets called periodically
+	Sound_Play(pt_s, index_s);
+	//calls Sound_Play which makes the note
+	index_s++;
+	if (pt_s == highpitch){
+		end_idx = 1802;
+	}
+	if(pt_s == invaderkilled){
+		end_idx = 3377;
+	}
+	if(pt_s == shoot){
+		end_idx = 4080;
+	}
+	if(pt_s == explosion){
+		end_idx = 2000;
+	}
+	if(pt_s == fastinvader1){
+		end_idx = 982;
+	}
+	if(pt_s == fastinvader2){
+		end_idx = 1042;
+	}
+	if(pt_s == fastinvader3){
+		end_idx = 1054;
+	}
+	if(pt_s ==fastinvader4){
+		end_idx = 1098;
+	}
+	if(index_s >= end_idx){
+		TIMER1_CTL_R = 0x00000000;
+	}
+}
+
 void Sound_Fastinvader1(void){
-// write this
+	index_s = 0;
+	pt_s = fastinvader1;
+	Timer1_Init(Sound_Play_Init, 8000);
 };
+
 void Sound_Fastinvader2(void){
-// write this
+	index_s =0;
+	pt_s = fastinvader2;
+	Timer1_Init(Sound_Play_Init, 8000);
 };
+
 void Sound_Fastinvader3(void){
-// write this
+	index_s = 0;
+	pt_s = fastinvader3;
+	Timer1_Init(Sound_Play_Init, 8000);
 };
+
 void Sound_Fastinvader4(void){
-// write this
+	index_s = 0;
+	pt_s = fastinvader4;
+	Timer1_Init(Sound_Play_Init, 8000);
 };
+
+
 void Sound_Highpitch(void){
-// write this
+	index_s = 0;
+	pt_s = highpitch;
+	Timer1_Init(Sound_Play_Init, 8000);
+};
+
+void Sound_Shoot(void){
+	//calls Timer1_Init
+	index_s = 0;
+	pt_s = shoot;
+	Timer1_Init(Sound_Play_Init,8000);
+};
+
+void Sound_Killed(void){
+	index_s = 0;
+	pt_s = invaderkilled;
+	Timer1_Init(Sound_Play_Init,8000);
+};
+
+
+void Sound_Explosion(void){
+	index_s = 0;
+	pt_s = explosion;
+	Timer1_Init(Sound_Play_Init, 8000);
 };

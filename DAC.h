@@ -3,6 +3,8 @@
 #ifndef __DAC_H__ // do not include more than once
 #define __DAC_H__
 #include <stdint.h>
+void DAC_Init();
 
+void DAC_Out(uint32_t data);
 
 #endif
