@@ -19,3 +19,5 @@ T-Rex Run is based on Google's scroller game that appears when you don't have wi
 
 ## Demonstration and Visuals
 Here is a picture of the completed game and a link to a video demonstration of how the game is played.
+
+![Hardware Setup](https://github.com/ishan0102/t-rex-run/blob/master/T-Rex%20Run%20Setup.jpg)
