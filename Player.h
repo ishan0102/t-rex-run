@@ -11,6 +11,7 @@ void jumpingDino();
 int flag;
 int duckFlag;
 int jumpFlag;
+int pauseDino = 0;
 
 uint32_t Score;
 int currentDifficulty = 0;
@@ -97,106 +98,108 @@ int collision() {
 int jumpSize[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};  // 14
 
 void movingDino(){
-	if(!jumpFlag){
-		// TRex.clearPlayer();
-		static int counter = 0;
-		if(counter == 0){
-			if(duckFlag){
-				GPIO_PORTF_DATA_R &= 0x00;
-				GPIO_PORTF_DATA_R ^= 0x04;
-				if(flag){
-					TRex.pSprite = &dinoLeftDuck;
-					flag = 0;
+	if (!pauseDino) {
+		if(!jumpFlag){
+			// TRex.clearPlayer();
+			static int counter = 0;
+			if(counter == 0){
+				if(duckFlag){
+					GPIO_PORTF_DATA_R &= 0x00;
+					GPIO_PORTF_DATA_R ^= 0x04;
+					if(flag){
+						TRex.pSprite = &dinoLeftDuck;
+						flag = 0;
+					} else {
+						TRex.pSprite = &dinoRightDuck;
+						flag = 1;
+					}
 				} else {
-					TRex.pSprite = &dinoRightDuck;
-					flag = 1;
+					GPIO_PORTF_DATA_R &= 0x00;
+					GPIO_PORTF_DATA_R ^= 0x08;
+					if(flag){
+						TRex.pSprite = &dinoLeft;
+						flag = 0;
+					} else {
+						TRex.pSprite = &dinoRight;
+						flag = 1;
+					}
 				}
-			} else {
-				GPIO_PORTF_DATA_R &= 0x00;
-				GPIO_PORTF_DATA_R ^= 0x08;
-				if(flag){
-					TRex.pSprite = &dinoLeft;
-					flag = 0;
-				} else {
-					TRex.pSprite = &dinoRight;
-					flag = 1;
-				}
+				counter++;
+
+			} else if(counter >= 15){
+				counter = 0;
+			}	else {
+				counter++;
 			}
-			counter++;
+			//TRex.clearPlayer();
 
-		} else if(counter >= 15){
-			counter = 0;
+		} else {
+			static int jumpComplete = 0;
+			static int enterJump = 0;
+			static int index = 0;
+			static int indexFlag = 0;
+
+			if(!enterJump){
+				TRex.pSprite = &dino;
+				jumpComplete = 1;
+				enterJump = 1;
+			}
+			GPIO_PORTF_DATA_R &= 0x00;
+			GPIO_PORTF_DATA_R ^= 0x02;
+			// TRex.clearPlayer();
+			TRex.y = 1200 - index * 5;
+			if(index == 120){
+				indexFlag = 1;
+			}
+
+			if(!indexFlag){
+				index++;
+			} else {
+				index--;
+			}
+
+			// TRex.clearPlayer();
+			/*** exit case***/
+			if(index == -1){
+				jumpComplete = 0;
+				index = 0;
+				enterJump = 0;
+				jumpFlag = 0;
+				indexFlag = 0;
+			}
+		}		
+
+		static int counter2 = 0;
+		static int birdFlag = 0;
+		if(counter2 == 0){
+			if(birdFlag){
+				Bird.pSprite = &birdWingsDown;
+				birdFlag = 0;
+			} else {
+				Bird.pSprite = &birdWingsUp;
+				birdFlag = 1;
+			}
+
+			counter2++;
+		} else if(counter2 >= 30){
+			counter2 = 0;
 		}	else {
-			counter++;
+			counter2++;
 		}
-		//TRex.clearPlayer();
+		
+		Score++;
 
-	} else {
-		static int jumpComplete = 0;
-		static int enterJump = 0;
-		static int index = 0;
-		static int indexFlag = 0;
-
-		if(!enterJump){
-			TRex.pSprite = &dino;
-			jumpComplete = 1;
-			enterJump = 1;
-		}
-		GPIO_PORTF_DATA_R &= 0x00;
-		GPIO_PORTF_DATA_R ^= 0x02;
-		// TRex.clearPlayer();
-		TRex.y = 1200 - index * 5;
-		if(index == 120){
-			indexFlag = 1;
-		}
-
-		if(!indexFlag){
-			index++;
+		if(Cactus.x > -220){
+			Cactus.x -= Cactus.vx / 10;
 		} else {
-			index--;
+			Cactus.x = Random32() % 1000 + 1880;
 		}
 
-		// TRex.clearPlayer();
-		/*** exit case***/
-		if(index == -1){
-			jumpComplete = 0;
-			index = 0;
-			enterJump = 0;
-			jumpFlag = 0;
-			indexFlag = 0;
-		}
-	}		
-
-	static int counter2 = 0;
-	static int birdFlag = 0;
-	if(counter2 == 0){
-		if(birdFlag){
-			Bird.pSprite = &birdWingsDown;
-			birdFlag = 0;
+		if(Bird.x > -220){
+			Bird.x -= Bird.vx / 10;
 		} else {
-			Bird.pSprite = &birdWingsUp;
-			birdFlag = 1;
+			Bird.x = Random32() % 1000 + 1880;
 		}
-
-		counter2++;
-	} else if(counter2 >= 30){
-		counter2 = 0;
-	}	else {
-		counter2++;
-	}
-	
-	Score++;
-
-	if(Cactus.x > -220){
-		Cactus.x -= Cactus.vx / 10;
-	} else {
-		Cactus.x = Random32() % 1000 + 1880;
-	}
-
-	if(Bird.x > -220){
-		Bird.x -= Bird.vx / 10;
-	} else {
-		Bird.x = Random32() % 1000 + 1880;
 	}
 }
 

@@ -12,3 +12,5 @@ void SysTick_Init();
 void IO_Init();
 
 void IO_Touch();
+
+void IO_Touch_Pause();

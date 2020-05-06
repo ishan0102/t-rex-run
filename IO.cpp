@@ -42,8 +42,8 @@ void IO_Init() {
 	volatile int delay = 0;
 	SYSCTL_RCGCGPIO_R |= 0x0F;	// enable port D clock
 	delay = 0;
-	GPIO_PORTD_DIR_R &= ~0x01;	// set PD0 to input
-	GPIO_PORTD_DEN_R |= 0x01;		// enable PD0
+	GPIO_PORTD_DIR_R &= ~0x03;	// set PD0 and PD1 to input
+	GPIO_PORTD_DEN_R |= 0x03;		// enable PD0 and PD1
 }
 
 //------------IO_Touch------------
@@ -59,6 +59,24 @@ void IO_Touch() {
 	}
 	SysTick_Wait10ms(2);
 		while((GPIO_PORTD_DATA_R & 0x01) == 0x01){
+		waitDelay = 0;
+	}
+	SysTick_Wait10ms(2);
+}  
+
+//------------IO_Touch_Pause------------
+// wait for release and press of the switch
+// Delay to debounce the switch
+// Input: none
+// Output: none
+void IO_Touch_Pause() {
+ // --UUU-- wait for release; delay for 20ms; and then wait for press
+	volatile int waitDelay;
+	while((GPIO_PORTD_DATA_R & 0x02) != 0x02){
+		waitDelay = 0;
+	}
+	SysTick_Wait10ms(2);
+		while((GPIO_PORTD_DATA_R & 0x02) == 0x02){
 		waitDelay = 0;
 	}
 	SysTick_Wait10ms(2);
