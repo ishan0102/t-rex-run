@@ -80,9 +80,9 @@ void currentScore() {
 		ST7735_SetCursor(15, 2);
 		LCD_OutDec(Score);
 	} else {
-		ST7735_SetCursor(5, 2);
+		ST7735_SetCursor(4, 2);
 		ST7735_OutString(s2);
-		ST7735_SetCursor(16, 2);
+		ST7735_SetCursor(15, 2);
 		LCD_OutDec(Score);
 	}
 }	

@@ -110,10 +110,10 @@ void DeathScreenSpan(uint32_t final) {
 	char* s1 = (char*) "Tu Moriste";
 	ST7735_OutString(s1);
 	
-	ST7735_SetCursor(5, 5);
+	ST7735_SetCursor(4, 5);
 	char* s2 = (char*) "Resultado: ";
 	ST7735_OutString(s2);
-	ST7735_SetCursor(16, 5);
+	ST7735_SetCursor(15, 5);
 	LCD_OutDec(final);
 
 	ST7735_SetCursor(6, 8);
