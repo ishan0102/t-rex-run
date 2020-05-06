@@ -21,10 +21,10 @@ T-Rex Run is based on Google's scroller game that appears when you don't have wi
 - Slide pot pin 3 connected to 3.3V
 - Start button connected to PD0
 - Pause button connected to PD1
-- $12 \ k\Omega$ DAC bit 0 connected to PB0
-- $6 \ k\Omega$ DAC bit 1 connected to PB1
-- $3 \ k\Omega$ DAC bit 2 connected to PB2
-- $1.5 \ k\Omega$ DAC bit 3 connected to PB3
+- 12 kΩ DAC bit 0 connected to PB0
+- 6 kΩ DAC bit 1 connected to PB1
+- 3 kΩ DAC bit 2 connected to PB2
+- 1.5 kΩ DAC bit 3 connected to PB3
 - LEDs on PF1-PF3
 
 ## Demonstration and Visuals
