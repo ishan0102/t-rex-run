@@ -1152,9 +1152,14 @@ void Sound_Play(const uint8_t *pt, uint32_t count){
 	DAC_Out(note);
 };
 
+void Sound_Init(void){
+	DAC_Init();
+	Timer1_Init(&TIMER1_handler, 8000);
+}
+
 int end_idx;
 
-void Sound_Play_Init(void){
+void TIMER1_handler(void){
 	//gets called periodically
 	Sound_Play(pt_s, index_s);
 	//calls Sound_Play which makes the note
@@ -1191,50 +1196,41 @@ void Sound_Play_Init(void){
 void Sound_Fastinvader1(void){
 	index_s = 0;
 	pt_s = fastinvader1;
-	Timer1_Init(Sound_Play_Init, 8000);
 };
 
 void Sound_Fastinvader2(void){
 	index_s =0;
 	pt_s = fastinvader2;
-	Timer1_Init(Sound_Play_Init, 8000);
 };
 
 void Sound_Fastinvader3(void){
 	index_s = 0;
 	pt_s = fastinvader3;
-	Timer1_Init(Sound_Play_Init, 8000);
 };
 
 void Sound_Fastinvader4(void){
 	index_s = 0;
 	pt_s = fastinvader4;
-	Timer1_Init(Sound_Play_Init, 8000);
 };
 
 
 void Sound_Highpitch(void){
 	index_s = 0;
 	pt_s = highpitch;
-	Timer1_Init(Sound_Play_Init, 8000);
 };
 
 void Sound_Shoot(void){
-	//calls Timer1_Init
 	index_s = 0;
 	pt_s = shoot;
-	Timer1_Init(Sound_Play_Init,8000);
 };
 
 void Sound_Killed(void){
 	index_s = 0;
 	pt_s = invaderkilled;
-	Timer1_Init(Sound_Play_Init,8000);
 };
 
 
 void Sound_Explosion(void){
 	index_s = 0;
 	pt_s = explosion;
-	Timer1_Init(Sound_Play_Init, 8000);
 };
