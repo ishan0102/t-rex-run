@@ -3,6 +3,7 @@
 #include "Images.h"
 #include "ST7735.h"
 #include "Random.h"
+#include "Sound.h"
 #include "../inc/tm4c123gh6pm.h"
 
 void movingDino();
@@ -207,8 +208,10 @@ uint32_t Position;  // 32-bit fixed-point 0.01 cm
 
 void checkPosition(){
 	if(Position > 120){
+		Sound_Fastinvader1();
 		duckFlag = 1;
 	} else if(Position < 40){
+		Sound_Highpitch();
 		jumpFlag = 1;
 		duckFlag = 0;
 	} else {

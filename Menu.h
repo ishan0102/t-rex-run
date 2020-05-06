@@ -4,6 +4,7 @@
 #include "SlidePot.h"
 #include "IO.h"
 #include "Print.h"
+#include "Sound.h"
 
 SlidePot sensor(373, 21); // initialize sensor
 uint32_t Data;      // 12-bit ADC
@@ -65,6 +66,7 @@ void TitleScreenEng() {
 	ST7735_OutString(s3);
 
 	IO_Touch();
+	Sound_Fastinvader2();
 }
 
 void TitleScreenSpan() {
@@ -81,6 +83,7 @@ void TitleScreenSpan() {
 	ST7735_OutString(s3);
 	
 	IO_Touch();
+	Sound_Fastinvader2();
 }
 
 void DeathScreenEng(uint32_t final) {
@@ -99,6 +102,7 @@ void DeathScreenEng(uint32_t final) {
 	ST7735_OutString(s3);
 	
 	IO_Touch();
+	Sound_Fastinvader4();
 }
 
 void DeathScreenSpan(uint32_t final) {
@@ -117,6 +121,7 @@ void DeathScreenSpan(uint32_t final) {
 	ST7735_OutString(s3);
 	
 	IO_Touch();
+	Sound_Fastinvader4();
 }
 
 void PreGame() {
@@ -136,6 +141,7 @@ void PauseScreenEng() {
 	ST7735_SetCursor(10, 5);
 	ST7735_OutString("Paused");
 	IO_Touch_Pause();
+	Sound_Highpitch();
 }
 
 void PauseScreenSpan() {
@@ -143,4 +149,5 @@ void PauseScreenSpan() {
 	ST7735_SetCursor(9, 5);
 	ST7735_OutString("Pausado");
 	IO_Touch_Pause();
+	Sound_Highpitch();
 }

@@ -65,6 +65,7 @@
 #include "Menu.h"
 #include "Print.h"
 #include "Sound.h"
+#include "DAC.h"
 
 extern "C" void DisableInterrupts(void);
 extern "C" void EnableInterrupts(void);
@@ -95,8 +96,8 @@ void increaseDifficult(){
 	}
 	
 	if(prevScore < temp){
-		Bird.vx *= 1.1;
-		Cactus.vx *= 1.1;
+		Bird.vx *= 1.01;
+		Cactus.vx *= 1.01;
 		prevScore = temp;
 	}
 	
@@ -112,9 +113,8 @@ int main(void){
 	IO_Init();
 	ADC_Init();
 	Timer0_Init(&movingDino, 600000); // 50 Hz
+	Sound_Init();
 	EnableInterrupts();
-	
-	// Timer1_Init(&screenRefresh,8000000); // 50 Hz
 	ST7735_FillScreen(0x0000); // set screen to black
 	
 	while (1) {
@@ -169,6 +169,7 @@ int main(void){
 		
 		// check if collision occurred
 		if (collision()) {
+			Sound_Explosion();
 			ST7735_FillScreen(0000);
 			if (!LanguageFlag) {
 				DeathScreenEng(Score);
